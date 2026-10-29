@@ -10,6 +10,13 @@
       "title": "Linear workspace",
       "description": "Your Linear workspace slug (the part after linear.app/). Leave empty to hide ticket links.",
       "required": false
+    },
+    "sections": {
+      "type": "string",
+      "title": "Sections",
+      "description": "Which sections show, top to bottom, comma-separated: goal, prs, artifacts, agents, tooling. Leave one out to hide it.",
+      "default": "goal,prs,artifacts,agents,tooling",
+      "required": false
     }
   }
 }

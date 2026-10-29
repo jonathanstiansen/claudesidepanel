@@ -14,13 +14,32 @@ Each pill folds with ▾/▸. A twinkling starfield sits behind the pills.
 
 ## Install
 
-Type this at the prompt of a terminal Claude Code session:
+Run the setup. It needs only bash and the Claude Code CLI:
+
+```
+bash <(curl -fsSL https://raw.githubusercontent.com/jonathanstiansen/claudesidepanel/main/setup.sh)
+```
+
+It works like [ccstatusline](https://github.com/sirmalloc/ccstatusline)'s setup: a live preview of the panel on top, a menu below.
+
+- **Sections**: pick which ones show and their order (space shows or hides, u/d moves).
+- **Linear**: your workspace, for 🎫 ticket links.
+- **Requirements**: checks `claude` and `gh`.
+- **Install to Claude Code**: installs, or saves your changes when already installed.
+
+Run it again any time to change your choices. Without the menu:
+
+```
+bash setup.sh --yes --sections goal,prs,tooling --linear my-workspace
+```
+
+Or install by hand, at the prompt of a terminal Claude Code session:
 
 ```
 /plugin install thread-refs --marketplace jonathanstiansen/claudesidepanel
 ```
 
-Answer `y` to add the marketplace, then pick a scope. Open the panel with `/thread-refs`, or paste a PR link.
+Open the panel with `/thread-refs`, or paste a PR link.
 
 ## Needs
 
@@ -30,6 +49,7 @@ Answer `y` to add the marketplace, then pick a scope. Open the panel with `/thre
 
 | Setting | What it does |
 |---|---|
+| `sections` | Which sections show, top to bottom: `goal,prs,artifacts,agents,tooling`. Leave one out to hide it. |
 | `linearWorkspace` | Your Linear workspace slug (the part after `linear.app/`). When set, a 🎫 beside a PR opens its Linear ticket, found as `[ABC-123]` in the title or `abc-123` in the branch. Empty: no ticket links. |
 
 Change it in `/config`.
@@ -39,6 +59,7 @@ Change it in `/config`.
 ```
 claude plugin validate .
 claude plugin test .
+bash tests/setup.test.sh
 ```
 
 Run from a folder with `claude --plugin-dir <this folder>`.

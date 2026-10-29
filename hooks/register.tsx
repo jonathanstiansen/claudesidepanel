@@ -3,13 +3,10 @@ import type { EngineInterface, Register } from 'claude-code'
 
 import type { Pr } from '../types'
 import { stars } from './layers/stars'
-import { foldIdOf, group, header, noteIdOf, openUrlOf, viewIdOf } from './model'
+import { layoutOf, DEFAULT_SECTIONS } from './layout'
+import { foldIdOf, noteIdOf, openUrlOf, viewIdOf } from './model'
 import type { Ctx, Layer, Node, Snapshot } from './model'
 import { drawPane, PANE } from './pane'
-import { agentSection } from './sections/agents'
-import { artifactSection } from './sections/artifacts'
-import { chipSection } from './sections/chips'
-import { prSection } from './sections/prs'
 import { mergeAgents } from './sources/agents'
 import { artifactFromTool, upsertArtifacts } from './sources/artifacts'
 import { findPrs, ghPrView, prFromGh, upsertPr } from './sources/prs'
@@ -19,20 +16,8 @@ import { makeCtx } from './surface'
 // ── what the pane shows ─────────────────────────────────────────────────────
 // top to bottom; a group is a box of pills. Everything below this block is the shell.
 
-const LAYOUT: Node[] = [
-  header({ id: 'goal', label: 'GOAL:', placeholder: 'what is this thread for?', style: { borderColor: 'claude', labelColor: 'claude', borderStyle: 'double' } }),
-  prSection({ id: 'prs', title: '🐙 PULL REQUESTS' }),
-  artifactSection({ id: 'artifacts', title: '🎨 ARTIFACTS' }),
-  agentSection({ id: 'agents', title: '🤖 SUB-AGENTS' }),
-  group({
-    id: 'tooling',
-    title: '🧰 TOOLING',
-    children: [
-      chipSection({ id: 'skills', title: '🧠 SKILLS', quiet: 'skills', source: 'skills', glyph: '✨', color: 'suggestion' }),
-      chipSection({ id: 'plugins', title: '🔌 PLUGINS · MCP', quiet: 'plugins', source: 'plugins', glyph: '🧩', color: 'permission' }),
-    ],
-  }),
-]
+// what the pane shows, top to bottom, from the installer's `sections` setting (layout.ts)
+let LAYOUT: Node[] = layoutOf(DEFAULT_SECTIONS)
 
 // drawn back to front behind (desktop) or between (terminal) the pills
 const LAYERS: Layer[] = [stars]
@@ -122,6 +107,9 @@ export const register: Register = (on, options) => {
   // unset is a real state (no links yet); anything set must be a name
   if (workspace !== undefined && typeof workspace !== 'string') throw new Error('thread-refs: linearWorkspace must be a string')
   linearWorkspace = workspace?.trim() || undefined
+  const sections = options.sections ?? DEFAULT_SECTIONS
+  if (typeof sections !== 'string') throw new Error('thread-refs: sections must be a comma-separated string')
+  LAYOUT = layoutOf(sections)
 
   // nothing is reset here: a reload reruns this, and wiping lists makes the pane flash and reorder
   on('session.start', async ($, e, next) => {
