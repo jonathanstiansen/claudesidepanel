@@ -1,0 +1,13 @@
+{
+  "name": "claudesidepanel",
+  "description": "A composable side panel mod for Claude Code, on desktop and in the terminal",
+  "owner": {
+    "name": "Jonathan Stiansen"
+  },
+  "plugins": [
+    {
+      "name": "thread-refs",
+      "source": "./"
+    }
+  ]
+}

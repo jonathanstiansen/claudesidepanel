@@ -1,0 +1,14 @@
+{
+  "name": "thread-refs",
+  "version": "0.1.0",
+  "description": "Side panel listing the PRs, artifacts, sub-agents, skills and plugins used in a Claude Code session",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "linearWorkspace": {
+      "type": "string",
+      "title": "Linear workspace",
+      "description": "Your Linear workspace slug (the part after linear.app/). Leave empty to hide ticket links.",
+      "required": false
+    }
+  }
+}
